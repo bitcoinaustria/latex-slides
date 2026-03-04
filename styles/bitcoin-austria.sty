@@ -154,6 +154,183 @@
     \titlegraphic{\center\vspace{-1.5em}\roundedimage{#1}{0.5\textwidth}{2}}
 }
 
+%% ── General-Purpose Layout Macros ──────────────────────────────────────────────
+
+%% Split slide: text left, image right
+%% Usage: \splitslide{Left content}{image-path}{image-width-fraction}
+%%   image-width-fraction: e.g. 0.88 (relative to column width)
+\newcommand{\splitslide}[3]{%
+    \begin{columns}[T]
+        \begin{column}{0.48\textwidth}
+            #1
+        \end{column}
+        \hfill
+        \begin{column}{0.48\textwidth}
+            \centering
+            \roundedimage{#2}{#3\textwidth}{2}
+        \end{column}
+    \end{columns}
+}
+
+%% Split slide with image on the LEFT
+%% Usage: \splitslideimgleft{image-path}{image-width-fraction}{Right content}
+\newcommand{\splitslideimgleft}[3]{%
+    \begin{columns}[T]
+        \begin{column}{0.48\textwidth}
+            \centering
+            \roundedimage{#1}{#2\textwidth}{2}
+        \end{column}
+        \hfill
+        \begin{column}{0.48\textwidth}
+            #3
+        \end{column}
+    \end{columns}
+}
+
+%% Key-point / statement slide: large centered text for emphasis
+%% Usage: \keypoint{Statement text}
+\newcommand{\keypoint}[1]{%
+    \vfill
+    \begin{center}
+        {\BlinkHeadline\fontsize{24}{30}\selectfont\color{badark}#1\par}
+    \end{center}
+    \vfill
+}
+
+%% Key-point with accent color
+%% Usage: \keypointcolor{color}{Statement text}
+\newcommand{\keypointcolor}[2]{%
+    \vfill
+    \begin{center}
+        {\BlinkHeadline\fontsize{24}{30}\selectfont\color{#1}#2\par}
+    \end{center}
+    \vfill
+}
+
+%% Full-width image with caption below
+%% Usage: \fullimage{image-path}{caption text}
+\newcommand{\fullimage}[2]{%
+    \vfill
+    \begin{center}
+        \roundedimage{#1}{0.85\textwidth}{2}\\[0.6em]
+        {\fontsize{8}{10}\selectfont\color{bagray}#2\par}
+    \end{center}
+    \vfill
+}
+
+%% Full-width image without caption (maximum size)
+%% Usage: \fullimagenocaption{image-path}
+\newcommand{\fullimagenocaption}[1]{%
+    \vfill
+    \begin{center}
+        \roundedimage{#1}{0.92\textwidth}{2}
+    \end{center}
+    \vfill
+}
+
+%% Quote / citation block
+%% Usage: \baquote{Quote text}{Attribution / source}
+\newcommand{\baquote}[2]{%
+    \vfill
+    \begin{center}
+        \begin{minipage}{0.8\textwidth}
+            \centering
+            {\BlinkRegular\fontsize{18}{24}\selectfont\color{badark}%
+             \textit{``#1''}\par}
+            \vspace{0.6em}
+            {\fontsize{9}{11}\selectfont\color{bagray}--- #2\par}
+        \end{minipage}
+    \end{center}
+    \vfill
+}
+
+%% Numbered list (enumerate) in a clean block
+%% Usage: \numberedlist{Block title}{\item First \item Second ...}
+\newcommand{\numberedlist}[2]{%
+    \begin{block}{#1}
+        \vspace{0.2em}
+        \begin{enumerate}
+            \setlength{\itemsep}{0.35em}
+            #2
+        \end{enumerate}
+        \vspace{0.2em}
+    \end{block}
+}
+
+%% Two-column text (no image)
+%% Usage: \twocol{Left content}{Right content}
+\newcommand{\twocol}[2]{%
+    \begin{columns}[T]
+        \begin{column}{0.48\textwidth}
+            #1
+        \end{column}
+        \hfill
+        \begin{column}{0.48\textwidth}
+            #2
+        \end{column}
+    \end{columns}
+}
+
+%% Three-column layout
+%% Usage: \threecol{Col 1}{Col 2}{Col 3}
+\newcommand{\threecol}[3]{%
+    \begin{columns}[T]
+        \begin{column}{0.31\textwidth}
+            #1
+        \end{column}
+        \hfill
+        \begin{column}{0.31\textwidth}
+            #2
+        \end{column}
+        \hfill
+        \begin{column}{0.31\textwidth}
+            #3
+        \end{column}
+    \end{columns}
+}
+
+%% Highlight box: colored box for drawing attention to content
+%% Usage: \highlightbox{color}{content}
+\newcommand{\highlightbox}[2]{%
+    \begin{beamercolorbox}[rounded=true,shadow=false,wd=\linewidth,colsep*=4pt]{block body}
+        \colorbox{#1!15}{%
+            \parbox{\dimexpr\linewidth-2\fboxsep}{%
+                \color{badark}#2%
+            }%
+        }
+    \end{beamercolorbox}
+}
+
+%% Pros/Cons or comparison two-column
+%% Usage: \comparison{Left title}{Left items}{Right title}{Right items}
+\newcommand{\comparison}[4]{%
+    \begin{columns}[T]
+        \begin{column}{0.48\textwidth}
+            \begin{block}{#1}
+                \vspace{0.2em}
+                \begin{itemize}
+                    \setlength{\itemsep}{0.3em}
+                    #2
+                \end{itemize}
+                \vspace{0.2em}
+            \end{block}
+        \end{column}
+        \hfill
+        \begin{column}{0.48\textwidth}
+            \begin{exampleblock}{#3}
+                \vspace{0.2em}
+                \begin{itemize}
+                    \setlength{\itemsep}{0.3em}
+                    #4
+                \end{itemize}
+                \vspace{0.2em}
+            \end{exampleblock}
+        \end{column}
+    \end{columns}
+}
+
+%% ────────────────────────────────────────────────────────────────────────────────
+
 %% Package options handling (for future extensions)
 \ProcessOptions\relax
 
