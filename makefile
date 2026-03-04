@@ -27,16 +27,21 @@ endif
 # Default target
 all: build
 
-# Convert SVG logos to cropped PDFs (only when SVG is newer)
-logos/logo-bitcoin-austria.pdf: logos/Bitcoin_Austria_Logo_Horizontal_Light.svg
-	@echo "Converting Bitcoin Austria logo SVG to PDF..."
-	@inkscape --export-type=pdf --export-filename=logos/logo-bitcoin-austria-temp.pdf logos/Bitcoin_Austria_Logo_Horizontal_Light.svg
-	@echo "Cropping PDF to content..."
-	@pdfcrop logos/logo-bitcoin-austria-temp.pdf logos/logo-bitcoin-austria.pdf
-	@rm -f logos/logo-bitcoin-austria-temp.pdf
-	@echo "Logo processed: logos/logo-bitcoin-austria.pdf"
+# Convert SVG logos to PDF (no pdfcrop: white shapes would be cropped on white background)
+logos/logo-bitcoin-austria-light.pdf: logos/Bitcoin_Austria_Logomark_light.svg
+	@echo "Converting light logomark SVG to PDF..."
+	@inkscape --export-type=pdf --export-filename=logos/logo-bitcoin-austria-light.pdf logos/Bitcoin_Austria_Logomark_light.svg
 
-logos: logos/logo-bitcoin-austria.pdf
+logos/logo-bitcoin-austria-dark.pdf: logos/Bitcoin_Austria_Logomark_dark.svg
+	@echo "Converting dark logomark SVG to PDF..."
+	@inkscape --export-type=pdf --export-filename=logos/logo-bitcoin-austria-dark.pdf logos/Bitcoin_Austria_Logomark_dark.svg
+
+logos/logo-bitcoin-austria-white.pdf: logos/Bitcoin_Austria_Logomark_white.svg
+	@echo "Converting white (monochrome) logomark SVG to PDF..."
+	@inkscape --export-type=pdf --export-filename=logos/logo-bitcoin-austria-white.pdf logos/Bitcoin_Austria_Logomark_white.svg
+
+logos: logos/logo-bitcoin-austria-light.pdf logos/logo-bitcoin-austria-dark.pdf logos/logo-bitcoin-austria-white.pdf
+	@echo "All logos processed."
 
 # Handle presentation-specific generated files (e.g., generated-count.tex)
 $(PRES_DIR)/generated-count.tex: $(TEX_FILE)
@@ -48,14 +53,14 @@ $(PRES_DIR)/generated-count.tex: $(TEX_FILE)
 	fi
 
 # Build the presentation PDF
-build: logos/logo-bitcoin-austria.pdf $(PRES_DIR)/generated-count.tex
+build: logos/logo-bitcoin-austria-light.pdf logos/logo-bitcoin-austria-dark.pdf logos/logo-bitcoin-austria-white.pdf $(PRES_DIR)/generated-count.tex
 	@echo "Building $(PRES_NAME) presentation..."
 	@cd $(PRES_DIR) && latexmk -pdfxe -f -interaction=nonstopmode -silent $(PRES_NAME).tex || true
 	@test -f $(PDF_FILE) || (echo "Build failed. PDF not created. Run 'make build-verbose PRESENTATION=$(PRESENTATION)' for details." && exit 1)
 	@echo "Build complete: $(PDF_FILE)"
 
 # Build with full output for debugging
-build-verbose: logos/logo-bitcoin-austria.pdf $(PRES_DIR)/generated-count.tex
+build-verbose: logos/logo-bitcoin-austria-light.pdf logos/logo-bitcoin-austria-dark.pdf logos/logo-bitcoin-austria-white.pdf $(PRES_DIR)/generated-count.tex
 	@echo "Building $(PRES_NAME) presentation (verbose)..."
 	@cd $(PRES_DIR) && latexmk -pdfxe -f -interaction=nonstopmode $(PRES_NAME).tex
 	@echo "Build complete: $(PDF_FILE)"
@@ -113,13 +118,13 @@ screenshot-page: build
 	fi
 
 # Watch for changes and rebuild (verbose)
-watch: logos/logo-bitcoin-austria.pdf $(PRES_DIR)/generated-count.tex
+watch: logos/logo-bitcoin-austria-light.pdf logos/logo-bitcoin-austria-dark.pdf logos/logo-bitcoin-austria-white.pdf $(PRES_DIR)/generated-count.tex
 	@echo "Starting continuous compilation for $(PRES_NAME)..."
 	@echo "Press Ctrl+C to stop watching"
 	@cd $(PRES_DIR) && latexmk -pdfxe -f -interaction=nonstopmode -pvc $(PRES_NAME).tex
 
 # Watch for changes and rebuild (quiet)
-watch-quiet: logos/logo-bitcoin-austria.pdf $(PRES_DIR)/generated-count.tex
+watch-quiet: logos/logo-bitcoin-austria-light.pdf logos/logo-bitcoin-austria-dark.pdf logos/logo-bitcoin-austria-white.pdf $(PRES_DIR)/generated-count.tex
 	@echo "Starting quiet continuous compilation for $(PRES_NAME)..."
 	@echo "Press Ctrl+C to stop watching"
 	@cd $(PRES_DIR) && latexmk -pdfxe -f -interaction=batchmode -silent -pvc $(PRES_NAME).tex

@@ -1,4 +1,5 @@
 # LaTeX auxiliary files
+*.xdv
 *.aux
 *.bbl
 *.bcf
@@ -18,6 +19,9 @@
 **/*.pdf
 # Keep committed PDFs
 !logos/logo-bitcoin-austria.pdf
+!logos/logo-bitcoin-austria-light.pdf
+!logos/logo-bitcoin-austria-dark.pdf
+!logos/logo-bitcoin-austria-white.pdf
 !style-guide/style-guide.pdf
 
 # Generated count files
