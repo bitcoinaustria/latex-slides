@@ -1,0 +1,157 @@
+%% bitcoin-austria.sty
+%% Bitcoin Austria Beamer Style Package
+%% Provides consistent styling and macros for Bitcoin Austria presentations
+%%
+%% Usage: \usepackage{bitcoin-austria}
+%% Requires: XeLaTeX (for Blinker font via fontspec)
+%% License: Creative Commons Attribution-ShareAlike 4.0 International
+
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{bitcoin-austria}[2026/03/04 Bitcoin Austria Presentation Style]
+
+%% Required packages
+\RequirePackage{fontspec}
+\RequirePackage{xcolor}
+\RequirePackage{graphicx}
+\RequirePackage{tikz}
+\RequirePackage{amsmath}
+\RequirePackage{amsfonts}
+\RequirePackage{booktabs}
+\RequirePackage[protrusion=true,expansion=false]{microtype}
+
+%% TikZ libraries
+\usetikzlibrary{calc}
+
+%% Blinker Font Setup (self-contained: fonts bundled in ../fonts/)
+%% The path is relative to the presentation subdirectory (one level up)
+\newfontfamily\BlinkRegular[
+    Path=../fonts/,
+    Extension=.ttf,
+    BoldFont=Blinker-Bold,
+    ItalicFont=Blinker-Light,
+]{Blinker-Regular}
+
+\newfontfamily\BlinkHeadline[
+    Path=../fonts/,
+    Extension=.ttf,
+    BoldFont=Blinker-ExtraBold,
+]{Blinker-Headline}
+
+\newfontfamily\BlinkSemiBold[
+    Path=../fonts/,
+    Extension=.ttf,
+]{Blinker-SemiBold}
+
+%% Set Blinker as the default sans-serif font (Beamer uses sans by default)
+\setsansfont[
+    Path=../fonts/,
+    Extension=.ttf,
+    UprightFont=Blinker-Regular,
+    BoldFont=Blinker-SemiBold,
+    ItalicFont=Blinker-Light,
+    BoldItalicFont=Blinker-Bold,
+]{Blinker}
+
+%% ── Bitcoin Austria Color Palette ─────────────────────────────────────────────
+%% Primary brand colors (from Bitcoin Austria branding / PPTX theme)
+\definecolor{bared}{RGB}{227,0,15}        %% #E3000F - Bitcoin Austria Red (primary)
+\definecolor{baorange}{RGB}{247,147,26}   %% #F7931A - Bitcoin Orange (secondary)
+\definecolor{badark}{RGB}{34,34,34}       %% #222222 - Near Black
+\definecolor{balight}{RGB}{254,254,254}   %% #FEFEFE - Near White
+\definecolor{bagray}{RGB}{77,77,77}       %% #4D4D4D - Medium Gray
+\definecolor{bateal}{RGB}{115,191,184}    %% #73BFB8 - Teal / Mint accent
+\definecolor{bablue}{RGB}{13,87,155}      %% #0D579B - Blue accent
+\definecolor{bayellow}{RGB}{253,231,76}   %% #FDE74C - Yellow accent
+%% ──────────────────────────────────────────────────────────────────────────────
+
+%% Theme Setup - Metropolis with Bitcoin Austria customizations
+% Note: User must load metropolis theme before this package:
+%   \usetheme[progressbar=foot]{metropolis}
+
+%% Color Theme Customizations
+\setbeamercolor{background canvas}{bg=white}
+\setbeamercolor{normal text}{bg=white}
+\setbeamercolor{progress bar}{fg=bared, bg=badark!50}
+\setbeamercolor{palette primary}{bg=bared,fg=balight}
+\setbeamercolor{palette secondary}{bg=badark,fg=balight}
+\setbeamercolor{structure}{fg=bared}
+\setbeamercolor{frametitle}{bg=bared,fg=balight}
+\setbeamercolor{title}{bg=badark,fg=badark}
+\setbeamercolor{block title}{bg=bared,fg=balight}
+\setbeamercolor{block body}{bg=bared!10}
+\setbeamercolor{frame footer}{bg=bared!10}
+\setbeamercolor{date in head/foot}{bg=bared, fg=balight}
+\setbeamercolor{alerted text}{fg=bared}
+
+%% Font Customizations
+\setbeamerfont{footnote}{size=\tiny}
+\setbeamerfont{frametitle}{family=\BlinkHeadline}
+\setbeamerfont{title}{family=\BlinkHeadline,size=\Large}
+\setbeamerfont{subtitle}{family=\BlinkSemiBold}
+
+%% Custom Footer with frame numbers only
+\setbeamertemplate{footline}{%
+    \leavevmode%
+    \hbox{%
+        \begin{beamercolorbox}[wd=\paperwidth,ht=2.25ex,dp=1ex,right]{date in head/foot}%
+            \insertframenumber{} / \inserttotalframenumber\hspace*{2ex}
+        \end{beamercolorbox}%
+    }
+    \vskip0pt%
+}
+
+%% Remove margins from beamer frames
+\setbeamersize{text margin left=5pt,text margin right=5pt}
+
+%% Custom Frame Title Template with Bitcoin Austria logo
+\setbeamertemplate{frametitle}{%
+    \nointerlineskip%
+    \begin{beamercolorbox}[wd=\paperwidth,ht=2.6ex,dp=1ex,leftskip=0pt,rightskip=0pt]{frametitle}
+        \hbox to \paperwidth{%
+            \begin{beamercolorbox}[wd=0.72\paperwidth,left]{frametitle}%
+                \hspace*{3pt}\usebeamerfont{frametitle}\insertframetitle%
+            \end{beamercolorbox}%
+            \begin{beamercolorbox}[wd=0.28\paperwidth,right]{frametitle}%
+                \hfill\raisebox{-1ex}{\includegraphics[height=3.8ex,keepaspectratio]{../logos/logo-bitcoin-austria.pdf}}\hspace*{1pt}%
+            \end{beamercolorbox}%
+        }
+    \end{beamercolorbox}
+}
+
+%% Macro: Rounded corner images with aspect ratio support
+\newcommand{\roundedimage}[3]{%
+    % #1: image path
+    % #2: width (e.g., 0.4\textwidth)
+    % #3: aspect ratio (2 for 2:1, 1 for 1:1)
+    \begin{tikzpicture}
+        \ifnum#3=2
+            % 2:1 aspect ratio with extra height to avoid clipping heads (width:height ratio ~1.8:1)
+            \clip[rounded corners=5pt] (0,0) rectangle (#2,0.56*#2);
+        \else
+            % 1:1 aspect ratio (default)
+            \clip[rounded corners=5pt] (0,0) rectangle (#2,#2);
+        \fi
+        \node[anchor=south west, inner sep=0pt] at (0,0) {\includegraphics[width=#2,keepaspectratio]{#1}};
+    \end{tikzpicture}
+}
+
+%% Title Setup Helpers
+\newcommand{\bitcointitle}[2]{%
+    % #1: Main title
+    % #2: Subtitle
+    \title[#1]{\vspace{1.5in}#1}
+    \subtitle{#2}
+    \author{Bitcoin Austria}
+    \date{\today}
+    \institute{}
+}
+
+\newcommand{\bitcointitlegraphic}[1]{%
+    % #1: Image path for title graphic
+    \titlegraphic{\center\vspace{-1.5em}\roundedimage{#1}{0.5\textwidth}{2}}
+}
+
+%% Package options handling (for future extensions)
+\ProcessOptions\relax
+
+\endinput

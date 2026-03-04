@@ -1,0 +1,173 @@
+% style-guide.tex
+% Bitcoin Austria Präsentations-Style-Guide
+% Zeigt Farbpalette, Typografie und Layout-Elemente
+%
+% Bauen: cd .. && make PRESENTATION=style
+% Ergebnis: style-guide/style-guide.pdf
+
+\documentclass[aspectratio=169,t,9pt]{beamer}
+
+\usetheme[progressbar=foot]{metropolis}
+\usepackage{../styles/bitcoin-austria}
+
+% Titelfolie
+\title[Style Guide]{\vspace{1.2in}Bitcoin Austria\\ Präsentations-Style-Guide}
+\subtitle{Farbpalette · Typografie · Layout-Elemente}
+\author{Bitcoin Austria}
+\date{}
+\titlegraphic{\center\vspace{-1.5em}\roundedimage{pix/missverstaendnisse.jpg}{0.5\textwidth}{2}}
+
+\begin{document}
+
+% ── Folie 1: Titelfolie ───────────────────────────────────────────────────────
+\begin{frame}
+    \titlepage
+\end{frame}
+
+% ── Folie 2: Farbpalette ──────────────────────────────────────────────────────
+\begin{frame}{Farbpalette}
+
+    % 8 color swatches as a single TikZ picture — reliable positioning
+    \begin{center}
+        \begin{tikzpicture}[x=1.75cm, y=1.55cm]
+            % Dark-background swatches (white text)
+            \foreach \xx/\yy/\col/\cmd/\hexc in {
+                0/0/bared/bared/E3000F,
+                1/0/baorange/baorange/F7931A,
+                2/0/badark/badark/222222,
+                0/-1/bagray/bagray/4D4D4D,
+                1/-1/bateal/bateal/73BFB8,
+                2/-1/bablue/bablue/0D579B%
+            } {
+                \fill[\col, rounded corners=4pt] (\xx,\yy) rectangle ++(1.4,1.1);
+                \node[text=white, font=\fontsize{7}{9}\selectfont\bfseries] at (\xx+0.7,\yy+0.65) {\texttt{\textbackslash\cmd}};
+                \node[text=white, font=\fontsize{6}{8}\selectfont] at (\xx+0.7,\yy+0.35) {\texttt{\#\hexc}};
+            }
+            % Light-background swatches (dark text)
+            \fill[balight, rounded corners=4pt] (3,0) rectangle ++(1.4,1.1);
+            \draw[bagray, rounded corners=4pt, line width=0.3pt] (3,0) rectangle ++(1.4,1.1);
+            \node[text=badark, font=\fontsize{7}{9}\selectfont\bfseries] at (3.7,0.65) {\texttt{\textbackslash balight}};
+            \node[text=badark, font=\fontsize{6}{8}\selectfont] at (3.7,0.35) {\texttt{\#FEFEFE}};
+            \fill[bayellow, rounded corners=4pt] (3,-1) rectangle ++(1.4,1.1);
+            \node[text=badark, font=\fontsize{7}{9}\selectfont\bfseries] at (3.7,-0.35) {\texttt{\textbackslash bayellow}};
+            \node[text=badark, font=\fontsize{6}{8}\selectfont] at (3.7,-0.65) {\texttt{\#FDE74C}};
+            % Row labels
+            \node[text=badark, font=\fontsize{7.5}{9}\selectfont\bfseries, anchor=east] at (-0.1,0.55) {Primär};
+            \node[text=badark, font=\fontsize{7.5}{9}\selectfont\bfseries, anchor=east] at (-0.1,-0.45) {Akzent};
+        \end{tikzpicture}
+    \end{center}
+
+    \vspace{0.4em}
+
+    \begin{columns}[T]
+        \begin{column}{0.5\textwidth}
+            \textbf{Schriftart:} Blinker (SIL OFL) — XeLaTeX\\[2pt]
+            {\BlinkHeadline Blinker Headline · }{\BlinkSemiBold SemiBold · }{\BlinkRegular Regular}
+        \end{column}
+        \begin{column}{0.5\textwidth}
+            \textbf{LaTeX-Klasse:} \texttt{beamer} + Metropolis-Theme\\[2pt]
+            Kompilierung: \texttt{latexmk -pdfxe} (XeLaTeX)
+        \end{column}
+    \end{columns}
+
+\end{frame}
+
+% ── Folie 3: Textbausteine ────────────────────────────────────────────────────
+\begin{frame}{Textbausteine \& Typografie}
+
+    \begin{columns}[T]
+        \begin{column}{0.48\textwidth}
+
+            \begin{block}{Normaler Block (\texttt{block})}
+                Für neutrale Informationen und Fakten.\\
+                \textbf{Fett} · \textit{Kursiv} · \texttt{Monospace}
+            \end{block}
+
+            \vspace{0.5em}
+
+            \begin{alertblock}{\textcolor{white}{\textbf{Alert-Block (\texttt{alertblock})}}}
+                Für Fazit-Statements und Kernaussagen.\\
+                Immer mit \texttt{\textbackslash textcolor\{white\}\{...\}} im Titel.
+            \end{alertblock}
+
+            \vspace{0.5em}
+
+            \begin{exampleblock}{Beispiel-Block (\texttt{exampleblock})}
+                Für ergänzende Beispiele oder Quellen.
+            \end{exampleblock}
+
+        \end{column}
+        \begin{column}{0.48\textwidth}
+
+            \textbf{Aufzählungsliste:}
+            \begin{itemize}
+                \setlength{\itemsep}{0.4em}
+                \item Erster Punkt mit \textbf{Hervorhebung}
+                \item Zweiter Punkt — \textcolor{bared}{in Rot}
+                \item Dritter Punkt — \textcolor{baorange}{in Orange}
+                \item Vierter Punkt mit Quelle\footnotemark
+            \end{itemize}
+
+            \vspace{0.5em}
+
+            \textbf{Fußnoten-Pattern} (overlay-sicher):
+            \begin{itemize}
+                \setlength{\itemsep}{0.2em}
+                \item[\texttt{→}] \texttt{\textbackslash footnotemark} im Text
+                \item[\texttt{→}] \texttt{\textbackslash only<2->\{...\}} für den Text
+            \end{itemize}
+
+            \footnotetext[1]{Quelle: Beispiel-Fußnote}
+
+        \end{column}
+    \end{columns}
+
+\end{frame}
+
+% ── Folie 4: Zweispaltiges Layout mit Bild ────────────────────────────────────
+\begin{frame}{Zweispaltiges Layout · \texttt{\textbackslash roundedimage}}
+
+    \begin{columns}[T]
+        \begin{column}[T]{0.55\textwidth}
+
+            \begin{block}{Makro: \texttt{\textbackslash roundedimage}}
+                \vspace{0.3em}
+                \texttt{\textbackslash roundedimage\{pix/bild.jpg\}\{breite\}\{1\}}\\[3pt]
+                Parameter 3: \textbf{1} = quadratisch, \textbf{2} = 2:1 Querformat
+                \vspace{0.2em}
+            \end{block}
+
+            \vspace{0.5em}
+
+            \textbf{Typisches zweispaltiges Layout:}
+            \begin{itemize}
+                \setlength{\itemsep}{0.3em}
+                \item Links: Missverständnis-Block + Bild (Overlay~1)
+                \item Rechts: Fakten erscheinen auf Overlay~2
+                \item Makro: \texttt{\textbackslash misconceptionslide[bild]\{Titel\}\{...\}}
+            \end{itemize}
+
+            \vspace{0.5em}
+
+            \textbf{Format:} 16:9 (\texttt{aspectratio=169}),
+            \textbf{Schrift:} 9pt\\
+            Textbereich: ${\approx}$12{,}8\,cm ${\times}$ 9{,}6\,cm
+
+        \end{column}
+        \hspace{0.01\textwidth}
+        \begin{column}[T]{0.42\textwidth}
+            \centering
+            \vspace{0.5em}
+            \roundedimage{pix/mining.jpg}{0.85\textwidth}{2}\\[4pt]
+            {\fontsize{7}{9}\selectfont\textcolor{bagray}{Querformat (2:1) · \texttt{rounded corners=5pt}}}
+
+            \vspace{0.6em}
+
+            \roundedimage{pix/mining.jpg}{0.52\textwidth}{1}\\[4pt]
+            {\fontsize{7}{9}\selectfont\textcolor{bagray}{Quadratisch (1:1)}}
+        \end{column}
+    \end{columns}
+
+\end{frame}
+
+\end{document}

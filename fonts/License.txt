@@ -1,0 +1,7 @@
+SIL Open Font License 1.1
+
+Blinker is a trademark of supertype
+
+Copyright supertype 2019, Juergen Huber and Martin Wenzel. All rights reserved.
+
+http://scripts.sil.org/OFL
